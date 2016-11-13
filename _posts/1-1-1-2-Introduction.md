@@ -13,6 +13,6 @@
 **Exemples concret d'utilisation ?**
 
 - Exemple 1 :
-Envoyer une notification pour un rappel d'événement à tel date. {% fragment %}
+Envoyer une notification pour un rappel d'événement à tel date. 
 - Exemple 2 : 
-Lire une séquence audio en arrière plan. {% fragment %}
+Lire une séquence audio en arrière plan.
