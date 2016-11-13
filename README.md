@@ -1,5 +1,10 @@
 # Les Services - Android Studio
 
+**JF Durand - novembre 2016**
+
+Les slides du TP sont disponible ici : [https://whispyy.github.io/TP-Services](https://whispyy.github.io/TP-Services)
+
+
 ## Introduction
 
 **Qu'est ce qu'un Service ?**
@@ -26,9 +31,13 @@ Lire une séquence audio en arrière plan.
 
 **Cycles de vie**
 
-<img src="services_lifecycle.jpg"/>
+<p align="center">
+	<img src="img/services_lifecycle.jpg"/>
+</p>
+
 
 > Gauche : Service Local
+
 > Droite : Service Distant
 
 **Différences**
@@ -37,7 +46,7 @@ Un service local est lancé lorsqu'il est appelé par une activité. Il s'arrêt
 
 Un service distant permet une interaction de type "client-serveur". La persistance du service est du coup assuré par le paramètre 'connexion' de la fonction :
 
-> bindService(Intent MonService, ServiceConnection connexion, int flag)
+```bindService(Intent MonService, ServiceConnection connexion, int flag)```
 
 
 **Les flags**
@@ -57,9 +66,9 @@ Un service distant permet une interaction de type "client-serveur". La persistan
 
 ### 1. Récupération des sources
 
-Télécharger l'archive ici : [http://github.com/whispyy/TP-Services](http://github.com/whispyy/TP-Services)
+Télécharger l'archive ici : [https://github.com/whispyy/TP-Services/tree/local_service_initial](http://github.com/whispyy/TP-Services/tree/local_service_initial)
 
-Allez sur la branche local_service_initial et télécharger l'archive ou clonez là
+Ou clonez le dépot depuis mon git : [https://github.com/whispyy/TP-Services](https://github.com/whispyy/TP-Services) et basculez sur la branche : local_service_initial
 
 ### 2. Analyse de l'activité
 
@@ -104,6 +113,21 @@ Start permet de lancer le service et Cancel de l'annuler.
     }
 ```
 
+On remarque ici que le service est appelé une première fois par l'intermédiaire d'un Intent :
+
+```java
+Intent myIntent = new Intent(MainActivity.this, MyService.class);
+```
+
+Puis définitement appelé ici :
+
+```java
+alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+```
+
+Il faut imaginer ici que tout cela revient à faire une programmation d'un délai suivi d'un appel à ```startService(myIntent)``` .
+
+
 ### 3. Création d'un service local
 
 #### 3.1 Initialisation du service
@@ -114,14 +138,16 @@ Il faut effectuer la maneuvre suivante :
 * Naviguer jusque Service
 * Puis cliquer sur Service dans le sous-menu
 
-<img src="createService1.png"/>
+<p align="center">
+	<img src="img/createService1.png"/>
+</p>
 
 Nommez votre service MyService étant donné que c'est ainsi qu'il est appelé dans l'activité de l'archive.
 
 
 #### 3.2 Remplir le service
 
-**L'objectif est de créer un service ou l'on va pouvoir visualiser le cycle de vie d'un service**/
+**L'objectif est de créer un service ou l'on va pouvoir visualiser le cycle de vie d'un service.**
 
 Pour cela je propose de commencer par implémenter des toasts sur chaque fonction du service en question. 
 Je vous suggère également d'implémenter les return de la façon suivante.
@@ -135,6 +161,7 @@ Je vous suggère également d'implémenter les return de la façon suivante.
 
 
     @Override
+    public IBinder onBind(Intent intent) {
         Toast.makeText(this, "Service.onBind()", Toast.LENGTH_LONG).show();
         return null;
     }
@@ -150,10 +177,9 @@ Je vous suggère également d'implémenter les return de la façon suivante.
     public int onStartCommand(Intent intent, int flag, int startId){
         super.onStartCommand(intent,flag,startId);
         Toast.makeText(this, "Service.onStartCommand()",Toast.LENGTH_LONG).show();
+        //on retourne le flag comme évoqué dans l'introduction
         return START_NOT_STICKY;
     }
-
-
 
     @Override
     public boolean onUnbind(Intent intent) {
@@ -161,6 +187,11 @@ Je vous suggère également d'implémenter les return de la façon suivante.
         return super.onUnbind(intent);
     }
 ```
+
+> Attention :
+>
+> Même si nous créons un service local, il est nécéssaire de ré-écrire les fonctions d'un service distant à savoir :
+> onBind(Intent intent) ET onUnbind(Intent intent)
 
 Arrivé à ce stade vous pouvez exécuter l'application et la tester sur votre smartphone android. 
 Vous devriez apercevoir un toast pour chaque action du cycle de vie du service.
@@ -222,9 +253,11 @@ La connexion est gérée via le composant ServiceConnection d'Android.
 Nous avons vu comment implémenter succintement un Service local. Cependant si ce sujet vous intéresse je vous invite à aller voir le cours openclassroom (lien disponible dans la webographie).
 
 En effet vous pouvez être intéresser d'implémenter un service via :
-	* un IntentService
-	* un service distant
 
+* un IntentService
+* un service distant
+
+L'archive contenant les sources finales se trouve ici : [https://github.com/whispyy/TP-Services/tree/local_service_final](https://github.com/whispyy/TP-Services/tree/local_service_final)
 
 
 ---
