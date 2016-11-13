@@ -17,7 +17,7 @@ Un service possède un cycle de vie comme une activité mais pas d'interface gra
 
 - Exemple 1 :
 Envoyer une notification pour un rappel d'événement à tel date.
-- Exemple 2 : 
+- Exemple 2 :
 Lire une séquence audio en arrière plan.
 
 ---
@@ -46,7 +46,9 @@ Un service local est lancé lorsqu'il est appelé par une activité. Il s'arrêt
 
 Un service distant permet une interaction de type "client-serveur". La persistance du service est du coup assuré par le paramètre 'connexion' de la fonction :
 
-```bindService(Intent MonService, ServiceConnection connexion, int flag)```
+```
+bindService(Intent MonService, ServiceConnection connexion, int flag)
+```
 
 > Attention : Un service peut être les deux à la fois.
 
@@ -63,7 +65,7 @@ Un service distant permet une interaction de type "client-serveur". La persistan
 
 ---
 
-## Création d'un service 
+## Création d'un service
 
 ### 1. Récupération des sources
 
@@ -77,41 +79,44 @@ L'activité est composée de deux boutons : Start et Cancel.
 Start permet de lancer le service et Cancel de l'annuler.
 
 ```java
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Button buttonStart = (Button) findViewById(R.id.startalarm);
-        Button buttonCancel = (Button) findViewById(R.id.cancelalarm);
-        buttonStart.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
+@Override
+public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+    Button buttonStart = (Button) findViewById(R.id.startalarm);
+    Button buttonCancel = (Button) findViewById(R.id.cancelalarm);
+    buttonStart.setOnClickListener(new Button.OnClickListener() {
+        @Override
+        public void onClick(View arg0) {
 
-                Intent myIntent = new Intent(MainActivity.this, MyService.class);
-                pendingIntent = PendingIntent.getService(MainActivity.this, 0, myIntent, 0);
+            Intent myIntent = new Intent(MainActivity.this, MyService.class);
+            pendingIntent = PendingIntent.getService(MainActivity.this, 0, myIntent, 0);
 
-                //Setting up an alamManager
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(System.currentTimeMillis());
-                calendar.add(Calendar.SECOND, 15);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            //Setting up an alamManager
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            calendar.add(Calendar.SECOND, 15);
+            alarmManager.set(
+							AlarmManager.RTC_WAKEUP,
+							calendar.getTimeInMillis(),
+							pendingIntent);
 
-                // Tell user we have launched the service
-                Toast.makeText(MainActivity.this, "Start Alarm", Toast.LENGTH_SHORT).show();
-            }
-        });
-        buttonCancel.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
+            // Tell user we have launched the service
+            Toast.makeText(MainActivity.this, "Start Alarm", Toast.LENGTH_SHORT).show();
+        }
+    });
+    buttonCancel.setOnClickListener(new Button.OnClickListener() {
+        @Override
+        public void onClick(View arg0) {
 
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                alarmManager.cancel(pendingIntent);
-                // Tell the user about what we did.
-                Toast.makeText(MainActivity.this, "Cancel!", Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.cancel(pendingIntent);
+            // Tell the user about what we did.
+            Toast.makeText(MainActivity.this, "Cancel!", Toast.LENGTH_LONG).show();
+        }
+    });
+}
 ```
 
 On remarque ici que le service est appelé une première fois par l'intermédiaire d'un Intent :
@@ -150,7 +155,7 @@ Nommez votre service MyService étant donné que c'est ainsi qu'il est appelé d
 
 **L'objectif est de créer un service ou l'on va pouvoir visualiser le cycle de vie d'un service.**
 
-Pour cela je propose de commencer par implémenter des toasts sur chaque fonction du service en question. 
+Pour cela je propose de commencer par implémenter des toasts sur chaque fonction du service en question.
 Je vous suggère également d'implémenter les return de la façon suivante.
 
 ```java
@@ -194,7 +199,7 @@ Je vous suggère également d'implémenter les return de la façon suivante.
 > Même si nous créons un service local, il est nécéssaire de ré-écrire les fonctions d'un service distant à savoir :
 > onBind(Intent intent) ET onUnbind(Intent intent)
 
-Arrivé à ce stade vous pouvez exécuter l'application et la tester sur votre smartphone android. 
+Arrivé à ce stade vous pouvez exécuter l'application et la tester sur votre smartphone android.
 Vous devriez apercevoir un toast pour chaque action du cycle de vie du service.
 
 N'oubliez pas que dans les paramètres du services vous pouvez "forcer l'arrêt" du service étant donné que nous n'avons pas implémenté d'arrêt automatique de celui-ci. Je vous invite par ailleurs à modifier le paramètre return de la méthode onStartCommande() pour observer les différents comportements évoqué dans l'introduction.
@@ -202,7 +207,7 @@ N'oubliez pas que dans les paramètres du services vous pouvez "forcer l'arrêt"
 ### 3.3 Implémenter une notification
 
 Comme nous l'avons vu dans l'introduction un service permet d'éxécuter toute sorte de tâches en arrière plan.
-L'une des tâches les plus facile à implémenter étant donné le temps imparti est la notification. 
+L'une des tâches les plus facile à implémenter étant donné le temps imparti est la notification.
 Pour cela nous allons implémenter une notification dans la commande onStartCommande() comme suite :
 
 ```java
@@ -245,7 +250,8 @@ le service distant va implémenter les fonctions suivantes :
 ```
 
 Ce service sera appelé par une méthode ```bindService(Intent nomService, ServiceConnection connexion, int flag)``` .
-La connexion est gérée via le composant ServiceConnection d'Android.
+
+La connexion est gérée via le composant ServiceConnection d'Android. Vous pouvez avoir plus de renseignement sur ce composant en suivant le lien : [https://developer.android.com/reference/android/content/ServiceConnection.html](https://developer.android.com/reference/android/content/ServiceConnection.html)
 
 ---
 
@@ -268,3 +274,4 @@ L'archive contenant les sources finales se trouve ici : [https://github.com/whis
 - [Cours openclassroom](https://openclassrooms.com/courses/creez-des-applications-pour-android/les-services-3)
 - [Tutoriel Android Studio developpez.com](http://vogella.developpez.com/tutoriels/android/developpement-androidstudio-eclipse/)
 - [Schema cycle de vie](http://4.bp.blogspot.com/-lpA251Fsi0w/T7-WEcrYssI/AAAAAAAAAeQ/n8tsL2I_l-o/s1600/service_lifecycle_rdc.jpg)
+- [Developer Android - ServiceConnection](https://developer.android.com/reference/android/content/ServiceConnection.html)
