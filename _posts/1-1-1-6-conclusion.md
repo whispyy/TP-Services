@@ -1,7 +1,5 @@
 # Conclusion
 
-{% background white %} 
-
 Nous avons réalisé un service local simple.
 
 En savoir plus sur les services :
