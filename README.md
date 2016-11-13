@@ -48,6 +48,7 @@ Un service distant permet une interaction de type "client-serveur". La persistan
 
 ```bindService(Intent MonService, ServiceConnection connexion, int flag)```
 
+> Attention : Un service peut être les deux à la fois.
 
 **Les flags**
 
@@ -57,7 +58,7 @@ Un service distant permet une interaction de type "client-serveur". La persistan
 
 **Les deux façons d'implémenter un service**
 
-* Service : permet de créer un service ou le code sera executé dans le "thread" principale.
+* Service : permet de créer un service où le code sera executé dans le "thread" principale.
 * IntentService : permet de créer un service et gère une file d'attente des requête par ordre d'arrivée à chaque appel de startService().
 
 ---
@@ -223,7 +224,7 @@ Pour cela nous allons implémenter une notification dans la commande onStartComm
     }
 ```
 
-## 4. Différence entre un service local et distant
+## Différence entre un service local et distant
 
 le service distant va implémenter les fonctions suivantes :
 
@@ -231,7 +232,7 @@ le service distant va implémenter les fonctions suivantes :
     @Override
     public void onCreate() {}
 
-    @OVerride
+    @Override
     public IBinder onBind(Intent intent) {}
 
     @Override
